@@ -10,14 +10,12 @@
 
 #include "sdkconfig.h"
 
-#include "pn532.h"
+#define BLINK_GPIO GPIO_NUM_2
 
-#define BLINK_GPIO CONFIG_BLINK_GPIO
-
-#define PN532_SCK CONFIG_PN532_SCK
-#define PN532_MOSI CONFIG_PN532_MOSI
-#define PN532_SS CONFIG_PN532_SS
-#define PN532_MISO CONFIG_PN532_MISO
+#define PN532_SCK GPIO_NUM_14
+#define PN532_MOSI GPIO_NUM_13
+#define PN532_SS GPIO_NUM_26
+#define PN532_MISO GPIO_NUM_12
 
 static const char *TAG = "APP";
 
@@ -25,7 +23,7 @@ static pn532_t nfc;
 
 void blink_task(void *pvParameter)
 {
-    gpio_pad_select_gpio(BLINK_GPIO);
+    gpio_reset_pin(BLINK_GPIO);
     gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
     while (1)
     {
@@ -47,12 +45,14 @@ void nfc_task(void *pvParameter)
         ESP_LOGI(TAG, "Didn't find PN53x board");
         while (1)
         {
-            vTaskDelay(1000 / portTICK_RATE_MS);
+            vTaskDelay(pdMS_TO_TICKS(1000));
         }
     }
     // Got ok data, print it out!
-    ESP_LOGI(TAG, "Found chip PN5 %x", (versiondata >> 24) & 0xFF);
-    ESP_LOGI(TAG, "Firmware ver. %d.%d", (versiondata >> 16) & 0xFF, (versiondata >> 8) & 0xFF);
+    ESP_LOGI(TAG, "Found chip PN5 %02X", (uint8_t)(versiondata >> 24));
+    ESP_LOGI(TAG, "Firmware ver. %u.%u", 
+            (unsigned)((versiondata >> 16) & 0xFF),
+            (unsigned)((versiondata >> 8)  & 0xFF));
 
     // configure board to read RFID tags
     pn532_SAMConfig(&nfc);
@@ -77,7 +77,7 @@ void nfc_task(void *pvParameter)
             ESP_LOGI(TAG, "UID Length: %d bytes", uidLength);
             ESP_LOGI(TAG, "UID Value:");
             esp_log_buffer_hexdump_internal(TAG, uid, uidLength, ESP_LOG_INFO);   
-            vTaskDelay(1000 / portTICK_RATE_MS);         
+            vTaskDelay(pdMS_TO_TICKS(1000));         
         }
         else
         {
@@ -89,6 +89,6 @@ void nfc_task(void *pvParameter)
 
 void app_main()
 {
-    xTaskCreate(&blink_task, "blink_task", configMINIMAL_STACK_SIZE, NULL, 5, NULL);
+    xTaskCreate(&blink_task, "blink_task", 4096, NULL, 5, NULL);
     xTaskCreate(&nfc_task, "nfc_task", 4096, NULL, 4, NULL);
 }
