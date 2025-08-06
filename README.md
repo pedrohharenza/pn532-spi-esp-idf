@@ -50,7 +50,7 @@ To use this driver in your ESP-IDF project:
 4.  Use the provided functions (e.g., `pn532_getFirmwareVersion()`, `pn532_readPassiveTargetID()`, `pn532_mifareclassic_ReadDataBlock()`) to interact with the PN532 and NFC/RFID tags.
 
 If you need a fast coppy and paste code to validade the PN532 with spi module just use this code nad conect the pins of your ESP32 like this
-```
+```c
 #define BLINK_GPIO GPIO_NUM_2
 #define PN532_SCK GPIO_NUM_14
 #define PN532_MOSI GPIO_NUM_13
@@ -58,7 +58,7 @@ If you need a fast coppy and paste code to validade the PN532 with spi module ju
 #define PN532_MISO GPIO_NUM_12
 ```
 
-```
+```c
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
