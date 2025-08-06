@@ -51,19 +51,20 @@ static uint8_t pn532_spi_read(pn532_t *obj);
 
 void pn532_spi_init(pn532_t *obj, uint8_t clk, uint8_t miso, uint8_t mosi, uint8_t ss)
 {
-    obj->_clk = clk;
+    obj->_clk  = clk;
     obj->_miso = miso;
     obj->_mosi = mosi;
-    obj->_ss = ss;
+    obj->_ss   = ss;
 
-    gpio_pad_select_gpio(obj->_clk);
-    gpio_pad_select_gpio(obj->_miso);
-    gpio_pad_select_gpio(obj->_mosi);
-    gpio_pad_select_gpio(obj->_ss);
+    gpio_reset_pin(obj->_clk);
+    gpio_reset_pin(obj->_miso);
+    gpio_reset_pin(obj->_mosi);
+    gpio_reset_pin(obj->_ss);
 
     gpio_set_direction(obj->_ss, GPIO_MODE_OUTPUT);
     gpio_set_level(obj->_ss, 1);
-    gpio_set_direction(obj->_clk, GPIO_MODE_OUTPUT);
+
+    gpio_set_direction(obj->_clk,  GPIO_MODE_OUTPUT);
     gpio_set_direction(obj->_mosi, GPIO_MODE_OUTPUT);
     gpio_set_direction(obj->_miso, GPIO_MODE_INPUT);
 }
@@ -1526,3 +1527,4 @@ uint8_t pn532_spi_read(pn532_t *obj)
 
     return x;
 }
+
