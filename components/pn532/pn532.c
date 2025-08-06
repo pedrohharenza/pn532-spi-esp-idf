@@ -35,7 +35,7 @@
 #define _BV(bit) (1 << (bit))
 #endif
 
-#define PN532_DELAY(ms) vTaskDelay(ms / portTICK_RATE_MS)
+#define PN532_DELAY(ms) vTaskDelay(pdMS_TO_TICKS(ms))
 
 static uint8_t pn532ack[] = {0x00, 0x00, 0xFF, 0x00, 0xFF, 0x00};
 static uint8_t pn532response_firmwarevers[] = {0x00, 0xFF, 0x06, 0xFA, 0xD5, 0x03};
@@ -1527,4 +1527,5 @@ uint8_t pn532_spi_read(pn532_t *obj)
 
     return x;
 }
+
 
