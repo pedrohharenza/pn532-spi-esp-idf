@@ -1,6 +1,7 @@
 # PN532 NFC/RFID Driver for ESP-IDF
 
 This repository contains a C driver for the PN532 NFC/RFID reader, designed for use with ESP-IDF (Espressif IoT Development Framework) and FreeRTOS. It provides functionalities to interact with the PN532 module via SPI, enabling communication with various NFC/RFID tags, including MIFARE Classic and MIFARE Ultralight.
+This project demonstrates how to communicate with a **PN532 NFC module** using an **ESP32** with **ESP-IDF** over **SPI** while a blink LED task is running.
 
 ## Features
 
